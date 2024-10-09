@@ -4,7 +4,7 @@ const express = require('express');
 const rootDir = require('../util/path');
 const adminData = require('./admin');
 
-const router = express.Router();
+const router = express.Router(); 
 
 
 router.get('/', (req, res, next) => {
