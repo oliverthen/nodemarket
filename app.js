@@ -4,7 +4,7 @@ const express = require('express');
 
 const errorController = require('./controllers/error');
 const mongooseConnect = require('./util/database');
-// const User = require('./models/user');
+const User = require('./models/user');
 
 const app = express();
 
@@ -18,16 +18,16 @@ const shopRoutes = require('./routes/shop');
 app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use((req, res, next) => {
-// 	User.findById('672f603410c280f115069c2b')
-// 		.then(user => {
-// 			req.user = new User(user.name, user.email, user.cart, user._id);
-// 			next();
-// 		})
-// 		.catch(err => {
-// 			console.log(err);
-// 		});
-// 	});
+app.use((req, res, next) => {
+	User.findById('67378d392c6b5991a468c105')
+		.then(user => {
+			req.user = user;
+			next();
+		})
+		.catch(err => {
+			console.log(err);
+		});
+	});
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
@@ -35,6 +35,19 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 mongooseConnect()
 	.then(result => {
+		User.findOne().then(user => {
+			if (!user) {
+				const user  = new User({
+				name: 'Oliver',
+				email: 'oliver@test.com',
+				cart: {
+					items: []
+				}
+				});
+				user.save()
+			}
+		})
+		
 		app.listen(3000)
 	})
 	.catch(err => {
