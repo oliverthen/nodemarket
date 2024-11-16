@@ -65,14 +65,13 @@ exports.postCart = (req, res, next) => {
 			return req.user.addToCart(product)	
 		})
 		.then(result => {
-			console.log(result);
 			res.redirect('/cart');
 		});
 };
 
 exports.postCartDeleteProduct= (req, res, next) => {
 	const prodId = req.body.productId;
-	req.user.deleteItemFromCart(prodId)
+	req.user.removeFromCart(prodId)
 		.then(result => {
 			res.redirect('/cart');
 		})
