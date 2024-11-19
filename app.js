@@ -27,16 +27,7 @@ app.use(bodyParser.urlencoded());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({secret: 'my secret', resave: false, saveUninitialized: false, store}));
 
-app.use((req, res, next) => {
-	User.findById('67378d392c6b5991a468c105')
-		.then(user => {
-			req.user = user;
-			next();
-		})
-		.catch(err => {
-			console.log(err);
-		});
-	});
+
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);

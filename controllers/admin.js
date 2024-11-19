@@ -2,7 +2,7 @@ const Product = require('../models/product');
 
 
 exports.getAddProduct = (req, res, next) => {
-	res.render('admin/edit-product', {pageTitle: 'Add Product', path: '/admin/add-product', editing: false, isAuthenticated: req.isLoggedIn});
+	res.render('admin/edit-product', {pageTitle: 'Add Product', path: '/admin/add-product', editing: false, isAuthenticated: req.session.isLoggedIn});
 };
 
 exports.postAddProduct = (req, res, next) => {
@@ -15,7 +15,7 @@ exports.postAddProduct = (req, res, next) => {
 		price, 
 		description, 
 		imageUrl,
-		userId: req.user
+		userId: req.session.user
 	});
 	product
 		.save()
@@ -45,7 +45,7 @@ exports.getEditProduct = (req, res, next) => {
 				path: '/admin/edit-product',
 				editing: editMode,
 				product,
-				isAuthenticated: req.isLoggedIn
+				isAuthenticated: req.session.isLoggedIn
 			});
 		})
 		.catch();
@@ -84,7 +84,7 @@ exports.getProducts = (req, res, next) => {
 				prods: products, 
 				pageTitle: 'Admin Products', 
 				path: '/admin/products',
-				isAuthenticated: req.isLoggedIn
+				isAuthenticated: req.session.isLoggedIn
 			});
 		})
 		.catch(err => {
