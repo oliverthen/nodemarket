@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
+const { validationResult } = require('express-validator/check');
+
 exports.getLogin = (req, res, next) => {
 	let message = req.flash('error');
 
