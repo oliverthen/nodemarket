@@ -15,7 +15,12 @@ exports.getLogin = (req, res, next) => {
   res.render('auth/login', {
     path: '/login',
     pageTitle: 'Login',
-		errorMessage: message
+		errorMessage: message,
+		oldInput: {
+			email: '',
+			password: '',
+		},
+		validationErrors: []
   });
 };
 
@@ -49,14 +54,21 @@ exports.postLogin = (req, res, next) => {
 		return res.status(422).render('auth/login', {
 			path: '/login',
 			pageTitle: 'Login',
-			errorMessage: errors.array()[0].msg
+			oldInput: {email, password},
+			errorMessage: errors.array()[0].msg,
+			validationErrors: errors.array()
 		});
 	}
 	User.findOne({email})
 		.then(user => {
 			if (!user) {
-				req.flash('error', 'Invalid email or password.');
-				return res.redirect('/login');
+				return res.status(422).render('auth/login', {
+					path: '/login',
+					pageTitle: 'Login',
+					oldInput: {email, password},
+					errorMessage: 'Invalid email or password.',
+					validationErrors: []
+				});
 			}
 			bcrypt.compare(password, user.password)
 				.then(doMatch => {
@@ -67,8 +79,13 @@ exports.postLogin = (req, res, next) => {
 							console.log(err);
 							res.redirect('/');
 						})					}
-					req.flash('error', 'Invalid email or password.');
-					res.redirect('/login');
+					return res.status(422).render('auth/login', {
+						path: '/login',
+						pageTitle: 'Login',
+						oldInput: {email, password},
+						errorMessage: 'Invalid email or password.',
+						validationErrors: []
+					});
 				})
 				.catch(err => {
 					console.log(err);
